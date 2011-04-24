@@ -1,4 +1,0 @@
-Minimal example game using StdGame and implementing scrolling.
-<br>
-Move up and down using the cursors, cursor right is speed up.
-Pick up the blue pods but avoid the ships.

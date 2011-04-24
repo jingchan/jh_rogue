@@ -1,2 +1,0 @@
-A Centipede clone.  Move around using the cursor keys, use 'Z' to shoot.
-

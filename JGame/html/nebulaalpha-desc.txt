@@ -1,3 +1,0 @@
-A game that's guaranteed to ruin your space bar.
-<br>
-Instructions: use cursor left and right to move; press space to fire.
