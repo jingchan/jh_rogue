@@ -8,7 +8,7 @@ public class Tile {
 	}
 	
 	public void setType(int iType){
-		this.type = iType;
+		type = iType;
 	}
 	
 

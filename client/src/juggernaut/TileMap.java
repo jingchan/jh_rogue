@@ -27,19 +27,19 @@ public class TileMap {
 	}
 	
 	private Tile[][] initGrid(int xNum, int yNum) {
-		this.xSize = xNum;
-		this.ySize = yNum;
+		xSize = xNum;
+		ySize = yNum;
 		Tile ret[][];
-		ret = new Tile[this.xSize][this.ySize];
+		ret = new Tile[xSize][ySize];
 		
-		for (int i=0; i<this.xSize; i++){
-			for (int j=0; j<this.ySize; j++){
+		for (int i=0; i<xSize; i++){
+			for (int j=0; j<ySize; j++){
 				ret[i][j] = new Tile();
-				ret[i][j].setType((i+j)%2+1);
+				//ret[i][j].setType((i+j)%2+1);
+				ret[i][j].setType(2);
 			}
 		}
-				
-		
+
 		return ret;
 	}
 }
