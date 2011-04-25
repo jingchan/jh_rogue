@@ -2,53 +2,46 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
 
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
+from character.models import Character
+from map.models import Map
+from mob.models import Mob
+from item.models import Item
 
-class City(models.Model):
-    name = models.TextField()
+class GameInstanceManager(models.Manager):
+    def create_game_instance(self, mode, max_players):
+        instance = self.model(mode, max_players)
+        instance.save()
+        return instance
     
-class State(models.Model):
-    name = models.TextField()
+class GameInstance(models.Model):
+    mode = models.TextField()
+    max_players = models.IntegerField()
     
-class Location(models.Model):
-    street = models.TextField()
-    city = models.ForeignKey(City)
-    state = models.ForeignKey(State)
-    zipcode = models.CharField(max_length = 75, default = '') 
+    objects = GameInstanceManager()
     
-class Restaurant(models.Model):
-    name = models.CharField(max_length = 75)
-    location = models.ForeignKey(Location)
-    delivery_range = models.IntegerField(default = 0)
-    active = models.BooleanField(default = True)
-    
-class DeliveryArea(models.Model):
-    restaurant = models.ForeignKey(Restaurant)
-    zipcode = models.CharField(max_length = 75, default = '')
+class MapInstance(models.Model):
+    map = models.ForeignKey(Map)
 
-class Food(models.Model):
-    name = models.TextField()
-    description = models.TextField()
+class ConnectedCharacter(models.Model):
+    instance = models.ForeignKey(GameInstance)
+    map = models.ForeignKey(MapInstance)
+    location = models.TextField()
+    status = models.TextField()
+    character = models.ForeignKey(Character)
 
-class FoodPhoto(models.Model):
-    food = models.ForeignKey(Food)
-    photo = models.ForeignKey(Photo)
+class MobInstance(models.Model):
+    map = models.ForeignKey(MapInstance)
+    location = models.TextField()
+    status = models.TextField()
+    mob = models.ForeignKey(Mob)
+
+class ItemInstance(models.Model):
+    instance = models.ForeignKey(MapInstance)
+    location = models.TextField()
+    item = models.ForeignKey(Item)
     
-class FoodItem(models.Model):
-    food = models.ForeignKey(Food)
-    restaurant = models.ForeignKey(Restaurant)
 
-class Menu(models.Model):
-    name = models.TextField()
-    restaurant = models.ForeignKey(Restaurant)
-    active = models.BooleanField(default = False)
-
-class MenuSection(models.Model):
-    menu = models.ForeignKey(Menu)
-
-class MenuItem(models.Model):
-    section = models.ForeignKey(MenuSection)
-    item = models.ForeignKey(FoodItem)
-    
     

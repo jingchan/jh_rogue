@@ -51,9 +51,7 @@ class Command(SouthCommand):
             if not ct_match_exist(content_types, ct.id, ct.name, ct.app_label, ct.model):
                 ctdict =  { 'id': ct.id, 'name': ct.name, 'app_label':
                            ct.app_label, 'model': ct.model } 
-                raise ValueError(""""An unexpected content type was found in the database.  You need to add it to the fixture file in 
-                                 core/management/commands/content_types.json."
-                                 {
+                print """{
                                     "pk": %(id)-s,
                                     "model": "contenttypes.contenttype",
                                     "fields": {
@@ -61,5 +59,5 @@ class Command(SouthCommand):
                                          "name": "%(name)-s",
                                          "app_label": "%(app_label)-s"
                                     }
-                                }
-                                """ % (ctdict))
+                                },
+                                """ % (ctdict)

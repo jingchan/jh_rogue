@@ -69,9 +69,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django_openidconsumer.middleware.OpenIDMiddleware',
-    'django_community.middleware.CommunityMiddleware',
-    'django_reputation.middleware.ReputationMiddleware',
 )
 
 ROOT_URLCONF = 'project.urls'
@@ -84,11 +81,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.auth', 
     'django.core.context_processors.debug', 
     'django.core.context_processors.i18n', 
-    'django_community.context_processors.community',
-    'django_defaultcontext.context_processors.defaults',
-    'django_defaultcontext.context_processors.site_sections',
-    'django_reputation.context_processors.reputation',
-    'django_comments.context_processors.comments_config',
 )
 
 INSTALLED_APPS = (
@@ -99,64 +91,15 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.markup', 
     'south',
-    'tutorials',
-    'projects',
-    'applications',
-    'code',
-    'info',
-    'search',
-    'django_qa',
-    'django_extensions',
-    'django_community',
-    'django_defaultcontext',
-    'django_comments',
-    'django_moderation',
-    'django_relatedcontent',
-    'django_metatagging',
-    'django_utils',
-    'django_multivoting',
-    'django_gravatar',
-    'django_openidconsumer',
-    'django_reputation',
-    'django_tracking',
-    'django_contenthistory',
-    'django_badges',
-    'django_userhistory',
-    'django_community_wiki',
-    'haystack',
-    'tagging',
-    'django_wizard',
-    'django_nose',
-    'compress',
+    'item',
+    'character',
+    'map',
+    'mob',
     'core',
 )
 
 
 CONFIGURED_APPS = (
-    'core',
-    'tutorials',
-    'projects',
-    'applications',
-    'code',
-    'info',
-    'django_qa',
-    'django_extensions',
-    'django_community',
-    'django_defaultcontext',
-    'django_comments',
-    'django_moderation',
-    'django_relatedcontent',
-    'django_metatagging',
-    'django_utils',
-    'django_multivoting',
-    'django_gravatar',
-    'django_openidconsumer',
-    'django_reputation',
-    'django_tracking',
-    'django_contenthistory',
-    'django_badges',
-    'django_userhistory',
-    'django_community_wiki',
 )
 
 
@@ -164,43 +107,3 @@ AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
 RECAPTCHA_PUBLIC_KEY = '6LdvGwYAAAAAAJsiMR4IkFJgMXIH-jtT1Rdu9A4G'
 RECAPTCHA_PRIVATE_KEY = '6LdvGwYAAAAAAKJ8TJD1WnUk7cbWZDH4fjysrCKJ'
-
-OPENID_ENABLED = True
-
-REPUTATION_ENABLED = True
-
-SETUP = False
-
-HISTORY_TRACKING = True
-
-HAYSTACK_SITECONF = 'project.haystack_site_confs'
-HAYSTACK_SEARCH_ENGINE = 'solr'
-HAYSTACK_SOLR_URL = 'http://127.0.0.1:8180/solr'
-
-MAX_POSTS_PER_DAY = 3
-
-COMPRESS_CSS_FILTERS = None
-
-COMPRESS_CSS = {
-    'standard': {'source_filenames': ('css/reset-fonts-grids.css',
-                                      'css/global.css',
-                                      'thickbox/thickbox.css',
-                                      'css/django_relatedcontent.css',),
-                 'output_filename': 'css/all_css.css',
-                 }
-}
-
-COMPRESS_JS = {
-    'standard': {
-        'source_filenames': ('js/jquery.form.js', 
-                             'js/jquery.metadata.js', 
-                             'js/jquery.utils.js', 
-                             'js/jquery.delegate.js', 
-                             'js/jquery.validate.min.js', 
-                             'js/jquery.ajax.js', 
-                             'js/jquery.hanbox.js'),
-        'output_filename': 'js/all_js.js',
-    }
-}
-
-COMPRESS_AUTO = False
