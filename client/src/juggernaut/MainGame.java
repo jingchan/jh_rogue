@@ -200,7 +200,9 @@ public class MainGame extends SimpleApplication implements ActionListener {
 	
 	void updateDrawEntities(){
 		playerModel.setLocalTranslation(player.position);
-		
+		Matrix3f rotationMat = new Matrix3f();
+		rotationMat.fromStartEndVectors(Vector3f.UNIT_Y, player.direction.normalize());
+		playerModel.setLocalRotation(rotationMat);
 //		System.out.printf(String.valueOf(player.position.x) + " ");
 //		System.out.printf(String.valueOf(player.position.y) + " ");
 //		System.out.printf(String.valueOf(player.position.z) + "\n");
