@@ -28,7 +28,7 @@ import juggernaut.entity.player.PlayerState;
 
 
 public class MainGame extends SimpleApplication implements ActionListener {
-	private TileGrid tileMap;
+	private Map map;
 	private Node mapRootNode;
 	private Player player;
 	private Geometry playerModel;
@@ -103,7 +103,7 @@ public class MainGame extends SimpleApplication implements ActionListener {
 		mapRootNode = new Node();
 		
 		SimpleMapParser smp = new SimpleMapParser("src/maps/test.map");
-		tileMap = smp.getMap().getTileGrid();
+		map = smp.getMap();
 		//tileMap = new TileGrid(100, 100);
 	 	 
 		Material brickMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -114,35 +114,38 @@ public class MainGame extends SimpleApplication implements ActionListener {
 		
 		Quad tileQuad = new Quad(1.0f,1.0f);
 		
-		for(int i=0; i<tileMap.getXSize(); i++){
-			for(int j=0; j<tileMap.getYSize(); j++){
+		for(int i=0; i<map.getTileGrid().getXSize(); i++){
+			for(int j=0; j<map.getTileGrid().getYSize(); j++){
 				Geometry tileGeom = new Geometry("Floor", tileQuad);
 				tileGeom.move(i, j, 0);
-				if(tileMap.getTile(i, j).getType() == 0){
-					tileGeom.setMaterial(brickMaterial);
+				if(map.getTileGrid().getTile(i, j).getType() == 0){
+					
 				}
-				else if(tileMap.getTile(i, j).getType() == 1){
+				else if(map.getTileGrid().getTile(i, j).getType() == 1){
 					tileGeom.setMaterial(brickMaterial);
+					mapRootNode.attachChild(tileGeom);
 				}
 				else{
 					tileGeom.setMaterial(rockMaterial);
+					mapRootNode.attachChild(tileGeom);
 				}
 					
 				
-				mapRootNode.attachChild(tileGeom);
+				
 			}
 		} 
 		rootNode.attachChild(mapRootNode);
 	}
 	
 	private void initPlayer(){
-		player = new Player();
+		player = new Player(new Vector3f(map.getPlayerCoord().x, map.getPlayerCoord().y, 0.0f));
 		
 		Material playerMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		playerMaterial.setColor("Color", ColorRGBA.Red);
-		Box b = new Box(player.getPosition().add(0.0f, 0.0f, 0.5f), 0.5f, 0.5f, 0.5f);
+		Box b = new Box(Vector3f.ZERO.add(0.0f, 0.0f, 0.5f), 0.5f, 0.5f, 0.5f);
 		playerModel = new Geometry("Player", b);
 		
+		playerModel.setLocalTranslation(player.getPosition());
 		playerModel.setMaterial(playerMaterial);
 		rootNode.attachChild(playerModel);
 	}
@@ -188,7 +191,7 @@ public class MainGame extends SimpleApplication implements ActionListener {
 //	};
 
 	void updateCamera(){
-		Vector3f newCameraPosition = player.getPosition().add(-5.0f, -5.0f, 15.0f);
+		Vector3f newCameraPosition = player.getPosition().add(-3.0f, -3.0f, 12.0f);
 		cam.setLocation(newCameraPosition);
 		cam.lookAt(player.getPosition(), Vector3f.UNIT_Z);
 	}
@@ -217,8 +220,9 @@ public class MainGame extends SimpleApplication implements ActionListener {
 			Vector3f collisionPoint = new Vector3f();
 			if(ray.intersectsWherePlane(new Plane(Vector3f.UNIT_Z, 0.0f), collisionPoint)){
 				mouseIndicator.setLocalTranslation(collisionPoint);
-				player.setDirection(collisionPoint.subtract(player.getPosition()));
-				player.setState(PlayerState.RUNNING);
+				player.walkTo(collisionPoint.x, collisionPoint.y);
+//				player.setDirection(collisionPoint.subtract(player.getPosition()));
+//				player.setState(PlayerState.RUNNING);
 			}
 //			if(collided.size()>0){
 //				CollisionResult closestCollision = collided.getClosestCollision();

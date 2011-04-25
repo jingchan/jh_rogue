@@ -22,19 +22,19 @@ public class Player extends MovableActor {
 		state = PlayerState.IDLE;
 	}
 	
-	public void update( float dt ){
-		float speed = 10.0f;
-		switch (state) {
-		case IDLE:
-			break;
-		case WALKING:
-			this.position = position.add(direction.normalize().mult(0.5f*speed*dt));
-			break;
-		case RUNNING:
-			this.position = position.add(direction.normalize().mult(speed*dt));
-			break;
-		}
-	}
+//	public void update( float dt ){
+//		float speed = 10.0f;
+//		switch (state) {
+//		case IDLE:
+//			break;
+//		case WALKING:
+//			this.position = position.add(direction.normalize().mult(0.5f*speed*dt));
+//			break;
+//		case RUNNING:
+//			this.position = position.add(direction.normalize().mult(speed*dt));
+//			break;
+//		}
+//	}
 	
 	public void setState( PlayerState st ){
 		state = st;

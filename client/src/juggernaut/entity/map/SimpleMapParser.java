@@ -1,4 +1,5 @@
 package juggernaut.entity.map;
+import com.jme3.math.*;
 import java.io.*;
 import java.util.Scanner;
 public class SimpleMapParser extends MapParser {
@@ -11,7 +12,7 @@ public class SimpleMapParser extends MapParser {
 	@Override
 	public Map getMap() {
 		TileGrid tg = null;
-		Map retMap = null;
+		
 		FileInputStream fStream = null;
 		try{
 			fStream = new FileInputStream(mapFile);
@@ -34,17 +35,14 @@ public class SimpleMapParser extends MapParser {
 					char c = s.charAt(j);
 					//char ch = inStream.readChar();
 						tg.setTile(Character.getNumericValue(c), i, j);
-						System.out.printf("%d",Character.getNumericValue(c));
 					}
 					catch (Exception e) {
-						System.out.printf("%d",0);
+
 					}
 				}
-				System.out.print("\n");
 			}
 			
-			retMap = new Map();
-			retMap.setTileGrid(tg);
+			
 		}
 		catch (Exception e){
 			System.err.print(e.toString());
@@ -52,6 +50,11 @@ public class SimpleMapParser extends MapParser {
 		finally {
 			scan.close();
 		}
+		
+		Map retMap = null;
+		retMap = new Map();
+		retMap.setTileGrid(tg);
+		retMap.setPlayerCoord(new Vector2f(tg.getXSize()/2.0f, tg.getYSize()/2.0f));
 		
 		return retMap;
 	}

@@ -6,19 +6,16 @@ public abstract class Actor {
 	protected Vector3f direction;
 	
 	protected Actor(){
-		System.out.print("Actor Created");
 		this.position = Vector3f.ZERO;
 		this.direction = Vector3f.UNIT_Y;
 	}
 	
 	protected Actor( Vector3f pos ){
-		System.out.print("Actor Created");
 		this.position = pos;
 		this.direction = Vector3f.UNIT_Y;
 	}
 	
 	protected Actor( Vector3f pos, Vector3f dir ){
-		System.out.print("Actor Created");
 		this.position = pos;
 		this.direction = dir;
 	}
