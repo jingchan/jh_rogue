@@ -18,7 +18,7 @@ class MapManager(models.Manager):
         for x in range(width):
             for y in range(height):
                 tiles.append((x, y, 0))
-        return json.dumps(tiles)
+        return tiles
     
 class Map(models.Model):
     tiles = models.TextField()
