@@ -21,26 +21,28 @@ import java.lang.reflect.Type;
 import com.jme3.math.*;
 
 public class Connection {
-	private boolean is_connection_open = false;
-	private ServerInfo server_info;
+	private boolean isConnectionOpen = false;
+	private ServerInfo serverInfo;
 	private String default_server = "http://localhost:8000/";
 	private Gson parser;
 	private JsonParser rParser;
 	
-	public Connection (final ServerInfo server_info) {
-		this.is_connection_open = false;
-		this.server_info = server_info;
+	public Connection (final ServerInfo serverInfo) {
+		this.isConnectionOpen = false;
+		this.serverInfo = serverInfo;
 		this.parser = new Gson();
 		this.rParser = new JsonParser();
 	}
 	
 	public Connection() {
-		
+		this.isConnectionOpen = false;
+		this.parser = new Gson();
+		this.rParser = new JsonParser();
 	}
 	
-	public TileGrid get_random_tile_map(int width, int height) {
+	public TileGrid getRandomTileMap(int width, int height) {
 		String host = this.default_server + "core/generate_tile_map/" + width + "/" + height + "/";
-		String response = this.get_response(host);
+		String response = this.getResponse(host);
 		
 		Type listType = new TypeToken<ArrayList<ArrayList<Integer>>>() {}.getType();
 		ArrayList<ArrayList<Integer>> tuples = this.parser.fromJson(response, listType);
@@ -52,9 +54,9 @@ public class Connection {
 		return grid;
 	}
 	
-	public Map get_random_map(int width, int height, int mob_count) {
+	public Map getRandomMap(int width, int height, int mob_count) {
 		String host = this.default_server + "core/generate_map/" + width + "/" + height;
-		String response = this.get_response(host);
+		String response = this.getResponse(host);
 		
 		String tiles = response.split("-----")[0];
 		String mobs = response.split("-----")[1];
@@ -73,7 +75,6 @@ public class Connection {
 		randomMap.setTileGrid(grid);
 		
 		JsonElement tree = this.rParser.parse(mobs);
-		JsonArray array = tree.getAsJsonArray();
 		for (JsonElement mobInfo : tree.getAsJsonArray()) {
 			MovableActor newMob = this.parseMob(mobInfo.getAsJsonArray());
 			System.out.println(newMob.toString());
@@ -83,7 +84,7 @@ public class Connection {
 		return randomMap;
 	}
 	
-	public String get_response(String host) {
+	public String getResponse(String host) {
 		HttpClient httpclient = new DefaultHttpClient();
         try {
             HttpGet httpget = new HttpGet(host);
@@ -99,7 +100,7 @@ public class Connection {
 	
 	public void test() {
 		String host = this.default_server + "core/generate_map/" + 100 + "/" + 100;
-		String response = this.get_response(host);
+		String response = this.getResponse(host);
 		
 		String tiles = response.split("-----")[0];
 		String mobs = response.split("-----")[1];
@@ -132,7 +133,7 @@ public class Connection {
 		String ip = "192.168.0.1";
 		ServerInfo i = new ServerInfo(ip);
 		Connection test_connection = new Connection(i);
-		Map new_map = test_connection.get_random_map(100, 100, 20);
+		Map new_map = test_connection.getRandomMap(100, 100, 20);
 		//test_connection.test();
 	}
 }
