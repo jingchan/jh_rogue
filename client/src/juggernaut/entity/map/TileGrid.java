@@ -69,4 +69,15 @@ public class TileGrid {
 	public int getYSize(){
 		return this.ySize;
 	}
+	
+	public String toString() {
+		String r = "";
+		for (int i=0; i<xSize; i++){
+			for (int j=0; j<ySize; j++){
+				r += new Integer(this.grid[i][j].getType()).toString();
+			}
+			r += "\n";
+		}
+		return r;
+	}
 }

@@ -45,7 +45,7 @@ USE_I18N = True
 STATIC_ROOT = join(PROJECT_ROOT, 'static')
 STATIC_URL = '/static/'
 MEDIA_ROOT = join(PROJECT_ROOT,  'static')
-MEDIA_URL = STATIC_URL + 'static/'
+MEDIA_URL = STATIC_URL + ''
 STATIC_LOCAL_ROOT = join(PROJECT_ROOT, 'static_local')
 STATIC_LOCAL_URL = '/static_local/'
 

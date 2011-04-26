@@ -8,19 +8,19 @@ public class MovableActor extends Actor {
 	MovableActorAction currentAction;
 	Actor actionTarget;
 	
-	protected MovableActor(){
+	public MovableActor(){
 		super();
 		currentMap = null;
 		currentAction = MovableActorAction.STANDING;
 	}
 	
-	protected MovableActor( Vector3f pos ){
+	public MovableActor( Vector3f pos ){
 		super(pos);
 		currentMap = null;
 		currentAction = MovableActorAction.STANDING;
 	}
 	
-	protected MovableActor( Vector3f pos, Vector3f dir ){
+	public MovableActor( Vector3f pos, Vector3f dir ){
 		super(pos, dir);
 		currentMap = null;
 		currentAction = MovableActorAction.STANDING;
