@@ -44,4 +44,7 @@ public abstract class Actor {
 		return this.direction;
 	}
 	
+	public String toString() {
+		return this.getPosition().toString() + "-----" + this.direction.toString();
+	}
 }

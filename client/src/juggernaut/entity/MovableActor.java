@@ -5,17 +5,17 @@ public class MovableActor extends Actor {
 	MovableActorAction currentAction;
 	Actor actionTarget;
 	
-	protected MovableActor(){
+	public MovableActor(){
 		super();
 		currentAction = MovableActorAction.STANDING;
 	}
 	
-	protected MovableActor( Vector3f pos ){
+	public MovableActor( Vector3f pos ){
 		super(pos);
 		currentAction = MovableActorAction.STANDING;
 	}
 	
-	protected MovableActor( Vector3f pos, Vector3f dir ){
+	public MovableActor( Vector3f pos, Vector3f dir ){
 		super(pos, dir);
 		currentAction = MovableActorAction.STANDING;
 	}
