@@ -13,4 +13,4 @@ parts
 project/media/uploads
 tmp
 project/local_settings.py
-
+rpgserver.egg-info/
