@@ -12,3 +12,5 @@ log
 parts
 project/media/uploads
 tmp
+project/local_settings.py
+
