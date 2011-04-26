@@ -7,9 +7,11 @@ public class Map {
 	private Vector2f playerCoord;
 	private TileGrid tileMap;
 	private ArrayList<MovableActor> mobs;
+	private ArrayList<Vector2f> startingLocations;
 	
 	public Map() {
 		this.mobs = new ArrayList<MovableActor>();
+		this.startingLocations = new ArrayList<Vector2f>();
 	}
 	
 	public Vector2f getPlayerCoord(){
@@ -29,5 +31,13 @@ public class Map {
 	
 	public void addMob(MovableActor mob) {
 		this.mobs.add(mob);
+	}
+	
+	public void addStartingLocation(Vector2f location) {
+		this.startingLocations.add(location);
+	}
+	
+	public Vector2f getStartingLocation() {
+		return this.startingLocations.get(0);
 	}
 }

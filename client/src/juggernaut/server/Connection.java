@@ -60,25 +60,21 @@ public class Connection {
 		
 		String tiles = response.split("-----")[0];
 		String mobs = response.split("-----")[1];
+		String startLocations = response.split("-----")[2];
 		
 		Map randomMap = new Map();
 		
-		Type tileType = new TypeToken<ArrayList<ArrayList<Integer>>>() {}.getType();
-		ArrayList<ArrayList<Integer>> tileList = this.parser.fromJson(tiles, tileType);
-		
-		TileGrid grid = new TileGrid(width, height);
-		
-		for (ArrayList<Integer> tile_info : tileList) {
-			grid.setTile(tile_info.get(2), tile_info.get(0), tile_info.get(1));
-		}
-		
+		TileGrid grid = this.parseTiles(this.rParser.parse(tiles).getAsJsonArray(), width, height);
 		randomMap.setTileGrid(grid);
 		
-		JsonElement tree = this.rParser.parse(mobs);
-		for (JsonElement mobInfo : tree.getAsJsonArray()) {
+		JsonArray tree = this.rParser.parse(mobs).getAsJsonArray();
+		for (JsonElement mobInfo : tree) {
 			MovableActor newMob = this.parseMob(mobInfo.getAsJsonArray());
-			System.out.println(newMob.toString());
 			randomMap.addMob(newMob);
+		}
+		
+		for (JsonElement startingLocation : this.rParser.parse(startLocations).getAsJsonArray()) {
+			randomMap.addStartingLocation(this.parseVector2f(startingLocation.getAsJsonArray()));
 		}
 		
 		return randomMap;
@@ -116,17 +112,38 @@ public class Connection {
 		}
 	}
 	
+	private TileGrid parseTiles(JsonArray tiles, int width, int height) {
+		TileGrid grid = new TileGrid(width, height);
+		
+		for (JsonElement element : tiles) {
+			JsonArray tileInfo = element.getAsJsonArray();
+			grid.setTile(tileInfo.get(2).getAsInt(), tileInfo.get(0).getAsInt(), tileInfo.get(1).getAsInt());
+		}
+		
+		return grid;
+	}
+	
 	private MovableActor parseMob(JsonArray mobInfo) {
 		JsonElement mobId = mobInfo.get(0);
 		JsonArray mobPosition = mobInfo.get(1).getAsJsonArray();
 		JsonArray mobDirection = mobInfo.get(2).getAsJsonArray();
 		String mobAsset = mobInfo.get(3).getAsString();
 		
-		Vector3f mobPositionVector = new Vector3f(mobPosition.get(0).getAsFloat(), mobPosition.get(1).getAsFloat(), mobPosition.get(2).getAsFloat());
-		Vector3f mobDirectionVector = new Vector3f(mobDirection.get(0).getAsFloat(), mobDirection.get(1).getAsFloat(), mobDirection.get(2).getAsFloat());
+		Vector3f mobPositionVector = this.parseVector3f(mobPosition);
+		Vector3f mobDirectionVector = this.parseVector3f(mobDirection);
 		
 		MovableActor mob = new MovableActor(mobPositionVector, mobDirectionVector);
 		return mob;
+	}
+	
+	private Vector3f parseVector3f(JsonArray jVector) {
+		Vector3f parsedVector = new Vector3f(jVector.get(0).getAsFloat(), jVector.get(1).getAsFloat(), jVector.get(2).getAsFloat());
+		return parsedVector;
+	}
+	
+	private Vector2f parseVector2f(JsonArray jVector) {
+		Vector2f parsedVector = new Vector2f(jVector.get(0).getAsFloat(), jVector.get(1).getAsFloat());
+		return parsedVector;
 	}
 	
 	public static void main(String[] args) {

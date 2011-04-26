@@ -15,11 +15,13 @@ def generate_map(request, map_width, map_height):
     width = int(map_width)
     height = int(map_height)
     
-    map = json.dumps(Map.objects.generate_random_map(width, height))
-    monsters = json.dumps(Mob.objects.generate_random_mobs(20, width, height))
+    tiles, starting_locations = Map.objects.generate_random_map(width, height)
+    mobs = Mob.objects.generate_random_mobs(20, width, height)
     
     return shortcuts.render_to_response('core/core.html',
-                                        {'response': "%s-----%s" % (map, monsters)},
+                                        {'response': "%s-----%s-----%s" % (json.dumps(tiles), 
+                                                                           json.dumps(mobs), 
+                                                                           json.dumps(starting_locations))},
                                         context_instance = RequestContext(request),
                                         mimetype = "application/json")
 
@@ -29,7 +31,7 @@ def generate_tile_map(request, width, height):
     width = int(map_width)
     height = int(map_height)
     
-    map = json.dumps(Map.objects.generate_random_map(width, height))
+    map, start_locations = json.dumps(Map.objects.generate_random_map(width, height))
     
     return shortcuts.render_to_response('core/core.html',
                                         {'response': map},

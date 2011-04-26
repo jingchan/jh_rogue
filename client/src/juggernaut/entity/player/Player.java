@@ -1,4 +1,5 @@
 package juggernaut.entity.player;
+
 import com.jme3.math.*;
 
 import juggernaut.entity.player.PlayerState;

@@ -1,0 +1,247 @@
+package juggernaut;
+ 
+
+import com.jme3.app.SimpleApplication;
+
+// Keyboard and Mouse Input
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.MouseInput;
+import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.input.controls.ActionListener;
+//import com.jme3.input.controls.AnalogListener;
+
+//import com.jme3.light.AmbientLight;
+//import com.jme3.light.DirectionalLight;
+
+import com.jme3.math.*;
+import com.jme3.scene.*;
+import com.jme3.scene.shape.*;
+import com.jme3.system.AppSettings;
+import com.jme3.material.Material;
+
+import com.jme3.collision.*;
+
+import juggernaut.entity.map.*;
+import juggernaut.entity.player.Player;
+import juggernaut.entity.player.PlayerState;
+import juggernaut.server.Connection;
+
+
+public class TestClient extends SimpleApplication implements ActionListener {
+	private Map map;
+	private Node mapRootNode;
+	private Player player;
+	private Geometry playerModel;
+	private Geometry mouseIndicator;
+	private boolean mouseActive;
+	private Connection connection;
+	
+	public static void main(String[] args) {
+		TestClient app = new TestClient();
+		AppSettings settings = new AppSettings(true);
+		
+		settings.setTitle("Juggernaut - Pre Alpha");
+		settings.setBitsPerPixel(24);
+		
+		settings.setResolution(800, 600);
+		settings.setFrequency(60);
+		settings.setSamples(2);
+		settings.setVSync(true);
+		
+		app.setShowSettings(false);
+		
+		app.setSettings(settings);
+		
+		app.setPauseOnLostFocus(false);
+		
+		app.start();
+	}
+	 
+	public void simpleInitApp() {
+		initMouse();
+		initConnection();
+		loadMap();
+		initMap();
+		initPlayer();
+		initKeys();
+		initCamera();
+	}
+	
+	private void initMouse() {
+		Box mouseBox = new Box(Vector3f.ZERO, 0.1f, 0.1f, 0.1f);
+		Material mouseMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		mouseMaterial.setColor("Color", ColorRGBA.Blue);
+		mouseIndicator = new Geometry("Mouse Indicator", mouseBox);
+		mouseIndicator.setMaterial(mouseMaterial);
+		rootNode.attachChild(mouseIndicator);
+	}
+	
+	private void initConnection() {
+		connection = new Connection();
+	}
+	
+	@Override
+	public void onAction(String arg0, boolean arg1, float arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void simpleUpdate( float tpf ) {
+		this.player.update(tpf);
+		updateCamera();
+		updateDrawEntities();
+		handleInputs();
+	}
+	
+	private void initCamera(){
+		viewPort.setBackgroundColor(new ColorRGBA(172.0f/255.0f,214.0f/255.0f,243.0f/255.0f,1f));
+
+		// Disable flyCam (instantiated by SimpleApplication)
+		flyCam.setEnabled(false);
+		
+		// Set up camera with default values
+		//cam.getLocation().set(0.0f, 0.0f, 0.0f);
+		cam.getUp().set(0.0f,0.0f,1.0f);
+		cam.getLeft().set(-1.0f,0.0f,0.0f);
+	}
+	
+	private void loadMap() {
+		this.map = this.connection.getRandomMap(100, 100, 20);
+		this.map.setPlayerCoord(this.map.getStartingLocation());
+	}
+	
+	private void initMap(){
+		mapRootNode = new Node();
+	 	 
+		Material brickMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		brickMaterial.setTexture("ColorMap", assetManager.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
+		
+		Material rockMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		rockMaterial.setTexture("ColorMap", assetManager.loadTexture("textures/ConcreteTexture.png"));
+		
+		Quad tileQuad = new Quad(2.0f,2.0f);
+		
+		for(int i=0; i<map.getTileGrid().getXSize(); i++){
+			for(int j=0; j<map.getTileGrid().getYSize(); j++){
+				Geometry tileGeom = new Geometry("Floor", tileQuad);
+				tileGeom.move(i*tileQuad.getWidth(), j*tileQuad.getHeight(), 0);
+				if(map.getTileGrid().getTile(i, j).getType() == 0){
+					
+				}
+				else if(map.getTileGrid().getTile(i, j).getType() == 1){
+					tileGeom.setMaterial(brickMaterial);
+					mapRootNode.attachChild(tileGeom);
+				}
+				else{
+					tileGeom.setMaterial(rockMaterial);
+					mapRootNode.attachChild(tileGeom);
+				}
+			}
+		} 
+		rootNode.attachChild(mapRootNode);
+	}
+	
+	private void initPlayer(){
+		player = new Player(new Vector3f(map.getPlayerCoord().x, map.getPlayerCoord().y, 0.0f));
+		
+		Material playerMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		playerMaterial.setColor("Color", ColorRGBA.Red);
+		Box b = new Box(Vector3f.ZERO.add(0.0f, 0.0f, 0.5f), 0.5f, 0.5f, 0.5f);
+		playerModel = new Geometry("Player", b);
+		
+		playerModel.setLocalTranslation(player.getPosition());
+		playerModel.setMaterial(playerMaterial);
+		rootNode.attachChild(playerModel);
+	}
+	
+	private void initKeys() {
+		inputManager.addMapping("MovePlayer", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+		inputManager.addMapping("Skill 1", new KeyTrigger(KeyInput.KEY_1));
+		inputManager.addMapping("Skill 2", new KeyTrigger(KeyInput.KEY_2));
+		inputManager.addMapping("Skill 3", new KeyTrigger(KeyInput.KEY_3));
+//		inputManager.addMapping("Skill 4", new KeyTrigger(KeyInput.KEY_4));
+//		inputManager.addMapping("Skill 5", new KeyTrigger(KeyInput.KEY_5));
+		
+		// Add the names to the action listener.
+		inputManager.addListener(actionListener, new String[]{"MovePlayer"});
+		inputManager.addListener(actionListener, new String[]{"Skill 1", "Skill 2", "Skill 3"});
+//		inputManager.addListener(actionListener, new String[]{"Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"});
+	}
+	
+	private ActionListener actionListener = new ActionListener() {
+		public void onAction(String name, boolean keyPressed, float tpf) {
+			if (name.equals("MovePlayer")) {
+				if(keyPressed){
+					mouseActive = true;
+				}
+				else{
+					mouseActive = false;
+					player.setState(PlayerState.IDLE);
+				}
+			} else if (name.equals("Skill 1") && keyPressed) {
+				System.out.print("Skill 1 used!\n");
+			} else if (name.equals("Skill 2") && keyPressed) {
+				System.out.print("Skill 2 used!\n");
+			} else if (name.equals("Skill 3") && keyPressed) {
+				System.out.print("Skill 3 used!\n");
+			}
+		}
+	};
+
+
+//	private AnalogListener analogListener = new AnalogListener() {
+//		public void onAnalog(String name, float value, float tpf) {
+//		}
+//	};
+
+	void updateCamera(){
+		Vector3f newCameraPosition = player.getPosition().add(-4.0f, -4.0f, 15.0f);
+		cam.setLocation(newCameraPosition);
+		cam.lookAt(player.getPosition(), Vector3f.UNIT_Z);
+	}
+	
+	void updateDrawEntities(){
+		playerModel.setLocalTranslation(player.getPosition());
+		Matrix3f rotationMat = new Matrix3f();
+
+		float angle = FastMath.atan2(player.getDirection().y, player.getDirection().x);
+		rotationMat.fromAngleAxis(angle, Vector3f.UNIT_Z);
+
+		playerModel.setLocalRotation(rotationMat);;
+	}
+
+	void handleInputs(){
+	
+		if(mouseActive){
+			Vector3f mouseOrigin = cam.getLocation();
+			Vector2f mouseScreenCoord = inputManager.getCursorPosition();
+			Vector3f mouseWorldCoord = cam.getWorldCoordinates(mouseScreenCoord, 0.1f);
+			Vector3f mouseDirection = mouseWorldCoord.subtract(mouseOrigin).normalizeLocal();
+			
+			Ray ray = new Ray(mouseOrigin, mouseDirection);
+			CollisionResults collided = new CollisionResults();
+			mapRootNode.collideWith(ray, collided);
+			
+			// NB: This results in false negatives due to edge collision errors.
+			//     Need to be replaced with a more general z=0 plane collision
+			Vector3f collisionPoint = new Vector3f();
+			if(ray.intersectsWherePlane(new Plane(Vector3f.UNIT_Z, 0.0f), collisionPoint)){
+				mouseIndicator.setLocalTranslation(collisionPoint);
+				player.walkTo(collisionPoint.x, collisionPoint.y);
+//				player.setDirection(collisionPoint.subtract(player.getPosition()));
+//				player.setState(PlayerState.RUNNING);
+			}
+//			if(collided.size()>0){
+//				CollisionResult closestCollision = collided.getClosestCollision();
+//				mouseIndicator.setLocalTranslation(closestCollision.getContactPoint());
+//				player.setDirection(closestCollision.getContactPoint().subtract(player.getPosition()));
+//				player.setState(PlayerState.RUNNING);
+//			}
+			else{
+				player.setState(PlayerState.IDLE);
+			}
+		}
+	}
+}
