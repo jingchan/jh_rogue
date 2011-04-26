@@ -112,12 +112,12 @@ public class MainGame extends SimpleApplication implements ActionListener {
 		Material rockMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		rockMaterial.setTexture("ColorMap", assetManager.loadTexture("textures/ConcreteTexture.png"));
 		
-		Quad tileQuad = new Quad(1.0f,1.0f);
+		Quad tileQuad = new Quad(2.0f,2.0f);
 		
 		for(int i=0; i<map.getTileGrid().getXSize(); i++){
 			for(int j=0; j<map.getTileGrid().getYSize(); j++){
 				Geometry tileGeom = new Geometry("Floor", tileQuad);
-				tileGeom.move(i, j, 0);
+				tileGeom.move(i*tileQuad.getWidth(), j*tileQuad.getHeight(), 0);
 				if(map.getTileGrid().getTile(i, j).getType() == 0){
 					
 				}
@@ -191,7 +191,7 @@ public class MainGame extends SimpleApplication implements ActionListener {
 //	};
 
 	void updateCamera(){
-		Vector3f newCameraPosition = player.getPosition().add(-3.0f, -3.0f, 12.0f);
+		Vector3f newCameraPosition = player.getPosition().add(-4.0f, -4.0f, 15.0f);
 		cam.setLocation(newCameraPosition);
 		cam.lookAt(player.getPosition(), Vector3f.UNIT_Z);
 	}
@@ -199,7 +199,10 @@ public class MainGame extends SimpleApplication implements ActionListener {
 	void updateDrawEntities(){
 		playerModel.setLocalTranslation(player.getPosition());
 		Matrix3f rotationMat = new Matrix3f();
-		rotationMat.fromStartEndVectors(Vector3f.UNIT_Y, player.getDirection());
+
+		float angle = FastMath.atan2(player.getDirection().y, player.getDirection().x);
+		rotationMat.fromAngleAxis(angle, Vector3f.UNIT_Z);
+
 		playerModel.setLocalRotation(rotationMat);;
 	}
 

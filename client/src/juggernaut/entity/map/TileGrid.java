@@ -1,4 +1,6 @@
 package juggernaut.entity.map;
+import com.jme3.math.FastMath;
+
 import juggernaut.entity.map.Tile;
 
 public class TileGrid {
@@ -36,6 +38,11 @@ public class TileGrid {
 		}
 
 		this.grid[x][y].setType(type);
+	}
+	
+	public Tile tileAtWoordCoord(float x, float y){
+		float tileSize = 2.0f;
+		return getTile((int)FastMath.floor(x/tileSize), (int)FastMath.floor(y/tileSize));
 	}
 	
 	private Tile[][] initGrid(int xNum, int yNum) {
