@@ -27,18 +27,11 @@
 	<classpathentry kind="lib" path="lib/xmlpull-xpp3-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
-<<<<<<< HEAD
-=======
-	<classpathentry kind="lib" path="lib/gson-1.7.1.jar"/>
->>>>>>> 96de2d9b5be650038dc16bf406d07391a04468c6
 	<classpathentry kind="lib" path="lib/httpclient-4.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/httpclient-cache-4.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.1.jar"/>
 	<classpathentry kind="lib" path="lib/httpmime-4.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/json_simple-1.1.jar"/>
-<<<<<<< HEAD
 	<classpathentry kind="lib" path="lib/gson-1.7.1.jar"/>
-=======
->>>>>>> 96de2d9b5be650038dc16bf406d07391a04468c6
 	<classpathentry kind="output" path="bin"/>
 </classpath>
